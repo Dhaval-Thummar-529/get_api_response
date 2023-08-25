@@ -19,6 +19,7 @@ class _SearchPage extends State<SearchPage> {
 
   // late Future<List<Product>> products;
   late List<Product> items;
+  bool found = true;
 
   List<Product> itemsAfterSearch = [];
 
@@ -47,6 +48,8 @@ class _SearchPage extends State<SearchPage> {
                   setState(() {
                     itemsAfterSearch = items;
                   });
+                } else {
+                  onSearchClick();
                 }
               },
               decoration: InputDecoration(
@@ -72,10 +75,13 @@ class _SearchPage extends State<SearchPage> {
 
   Widget getSearchedList() {
     return Center(
-      child: itemsAfterSearch.isNotEmpty
-          ? CategoryProductList(items: itemsAfterSearch)
-          : CategoryProductList(items: items),
-    );
+        child: itemsAfterSearch.isNotEmpty
+            ? CategoryProductList(items: itemsAfterSearch)
+            : found
+                ? CategoryProductList(items: items)
+                : const Center(
+                    child: Text("No Product Found!"),
+                  ));
   }
 
   void onSearchClick() {
@@ -92,6 +98,7 @@ class _SearchPage extends State<SearchPage> {
     setState(() {
       if (searchList.isEmpty) {
         itemsAfterSearch = [];
+        found = false;
       } else {
         itemsAfterSearch = searchList;
       }
